@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-discovery-backend
+  labels:
+    app: agent-discovery-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: agent-discovery-backend
+  template:
+    metadata:
+      labels:
+        app: agent-discovery-backend
+    spec:
+      containers:
+      - name: backend
+        image: enterprise.registry.io/agent-discovery/backend:latest
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: agent-discovery-secrets
+        - configMapRef:
+            name: agent-discovery-config
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
